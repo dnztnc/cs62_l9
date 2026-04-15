@@ -12,28 +12,41 @@ public class RisingTides {
 
         // create the flooded array
         boolean[][] flooded = new boolean[numRows][numCols];
-
         // create an empty queue for bfs.
-        // TODO: What is the type of the objects in queue?
         //Queue<_________> queue = new ArrayDeque<>();
+        Queue<GridLocation> bfsQueue = new ArrayDeque<>();
 
         // for (each water source at or below the water level)
-    
-
-            // flood that square
-            // add that square to the queue 
-
+        for (GridLocation source : sources) {
+            if (terrain[source.row][source.col] <= height) {
+                flooded[source.row][source.col] = true; // flood that square
+                bfsQueue.add(source); // add that square to the queue
+            }
+        }
         // while (the queue is not empty)
+        while (!bfsQueue.isEmpty()) {
             // dequeue a position from the front of the queue
-            
-            // for (each square adjacent to the position in a cardinal direction) 
-            
-                // if index out of bounds, skip checking this square 
-               
+            GridLocation current = bfsQueue.poll();
+            // for (each square adjacent to the position in a cardinal direction)
+            int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // up, down, left, right
+
+            for (int[] dir : directions) {
+                int newRow = current.row + dir[0];
+                int newCol = current.col + dir[1];
+                // if index out of bounds, skip checking this square
+                if (newRow < 0 || newRow >= numRows || newCol < 0 || newCol >= numCols) {
+                    continue;
+                }
                 // if (that square is at or below the water level and isn't yet flooded)
+                if (terrain[newRow][newCol] <= height && !flooded[newRow][newCol]) {
+                    flooded[newRow][newCol] = true;
+                    bfsQueue.add(new GridLocation(newRow, newCol));
                     // flood that square
                     // add that square to the queue
 
+                }
+            }
+        }
         return flooded;
     }
 
